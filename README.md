@@ -1,2 +1,34 @@
 # Manga Library Server - web scraping microservice
-This python API is set to work as a microservice, obtaining data through web scraping which then can be returned and use in the download microservice
+Esta API de python esta diseñada como microservicio para hacer web scraping a sitios cuyo contenido es manga/manhua/manhwa.
+
+## Tecnologias
+
+* Python
+* FastAPI
+* pydantic
+* os
+* BeautifulSoup
+* httpx
+
+## Arquitectura
+```
+src/
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
