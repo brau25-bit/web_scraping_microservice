@@ -19,11 +19,11 @@ async def getManga(data: MangaRequest):
     
     series_url = data.series_url
 
-    return JSONResponse(await manga_service.get_manga(series_url))
+    return await manga_service.get_manga(series_url)
 
-@router.get('/chapter/images')
+@router.get('/chapter')
 async def getImages(data: ChapterRequest):
 
-    chapter_url = data.series_url
+    chapter_url = data.chapter_url
 
-    return JSONResponse(await manga_service.get_chapter_img(chapter_url))
+    return await manga_service.get_chapter_img(chapter_url)
