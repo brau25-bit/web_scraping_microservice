@@ -1,5 +1,4 @@
 import httpx
-from src.exception.error import CustomError
 
 HEADERS = {
     "Accept-Language":"en-US,en;q=0.8",
@@ -29,5 +28,25 @@ class HTTPX:
             )
             
             return search_request
+        
+        except Exception as e:
+            raise e
+        
+    async def getSeries(self, series_url: str):
+        try:
+            series_request = await self.client.get(series_url)
+
+            return series_request
+        
+        except Exception as e:
+            raise e
+        
+    async def getChapters(self, chapter_url):
+        try:
+            result = await self.client.get(chapter_url)
+
+            result.raise_for_status()
+            
+            return result
         except Exception as e:
             raise e
