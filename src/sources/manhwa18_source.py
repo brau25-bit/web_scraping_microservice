@@ -12,13 +12,19 @@ class Manhwa18Source:
         result = await httpx_client.get(f"{self.base_url}search", series_name)
 
         result.raise_for_status()
-        
-        print(result.status_code)
 
         return result.text
 
-    async def getSeries(series_url):
-        return
+    async def getSeries(self, series_url):
+        result = await httpx_client.getSeries(series_url)
 
-    async def getChapters(chapter_url):
-        return
+        result.raise_for_status()
+
+        return result.text
+
+    async def getChapters(self, chapter_url):
+        result = await httpx_client.getChapters(chapter_url)
+
+        result.raise_for_status()
+
+        return result.text
