@@ -6,7 +6,6 @@ Esta API de python esta diseñada como microservicio para hacer web scraping a s
 * Python
 * FastAPI
 * pydantic
-* os
 * BeautifulSoup
 * httpx
 
