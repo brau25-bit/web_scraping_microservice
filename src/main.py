@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 app = FastAPI()
 
 @app.exception_handler(CustomError)
-async def custom_error_handler(exc: CustomError):
+async def custom_error_handler(request, exc: CustomError):
     return JSONResponse(
         status_code=exc.status_code,
         content={
