@@ -36,7 +36,7 @@ async def get_manga(series_url: str) -> MangaDetails:
         if not parsedSearchResult:
             raise CustomError("Encountered a problem while parsing the page or the resource wasnt found", 404, "parsing_error")
         
-        return parsedSearchResult
+        return seriesHTML
     except Exception as e:
         raise e
 
@@ -51,7 +51,7 @@ async def get_chapter_img(chapter_url: str) -> Chapter:
 
         if not parsedSearchResult:
             raise CustomError("Encountered a problem while parsing the page or the resource wasnt found", 404, "parsing_error")
-        
-        return parsedSearchResult
+
+        return chaptersHTML
     except Exception as e:
         raise e

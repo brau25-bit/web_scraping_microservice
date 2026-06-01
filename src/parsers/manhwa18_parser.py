@@ -4,7 +4,7 @@ class Manhwa18Parser:
         return "Hola"
     
     async def getSeries(series_url):
-        return
+        return "Hola"
     
     async def getChapters(chapter_url):
-        return
+        return "Hola"
