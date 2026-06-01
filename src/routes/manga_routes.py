@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from services import manga_service
-from models.request import MangaRequest, ChapterRequest, SearchRequest
+from src.services import manga_service
+from src.models.request import MangaRequest, ChapterRequest, SearchRequest
 
 router = APIRouter()
 
@@ -10,7 +10,9 @@ async def search(data: SearchRequest):
 
     series_name = data.series_name
 
-    return JSONResponse(await manga_service.search_series(series_name))
+    result = await manga_service.search_series(series_name)
+
+    return result
 
 @router.get('/')
 async def getManga(data: MangaRequest):
