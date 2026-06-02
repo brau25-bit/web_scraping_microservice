@@ -15,12 +15,14 @@ async def search_series(series_name: str) -> MangaSearchResult:
         if not searchHTML:
             raise CustomError("Content not found on source, try another name", 404, "source_problem")
         
-        parsedSearchResult = await Manhwa18Parser.search(searchHTML)
+        parser = Manhwa18Parser(searchHTML)
+        
+        parsedSearchResult = parser.search()
 
         if not parsedSearchResult:
             raise CustomError("Encountered a problem while parsing the page or the resource wasnt found", 404, "parsing_error")
         
-        return searchHTML
+        return parsedSearchResult
     except Exception as e:
         raise e
     
@@ -31,12 +33,14 @@ async def get_manga(series_url: str) -> MangaDetails:
         if not seriesHTML:
             raise CustomError("There was a problem with the source, try again", 404, "source_problem")
         
-        parsedSearchResult = await Manhwa18Parser.getSeries(seriesHTML)
+        parser = Manhwa18Parser(seriesHTML)
+
+        parsedSearchResult = parser.getSeries()
 
         if not parsedSearchResult:
             raise CustomError("Encountered a problem while parsing the page or the resource wasnt found", 404, "parsing_error")
         
-        return seriesHTML
+        return parsedSearchResult
     except Exception as e:
         raise e
 
@@ -47,7 +51,9 @@ async def get_chapter_img(chapter_url: str) -> Chapter:
         if not chaptersHTML:
             raise CustomError("There was a problem with the source, try again", 404, "source_error")
         
-        parsedSearchResult = await Manhwa18Parser.getChapters(chaptersHTML)
+        parser = Manhwa18Parser(chaptersHTML)
+
+        parsedSearchResult = parser.getChapters()
 
         if not parsedSearchResult:
             raise CustomError("Encountered a problem while parsing the page or the resource wasnt found", 404, "parsing_error")
