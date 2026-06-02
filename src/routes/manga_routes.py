@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from fastapi.responses import JSONResponse
 from src.services import manga_service
 from src.models.request import MangaRequest, ChapterRequest, SearchRequest
 
