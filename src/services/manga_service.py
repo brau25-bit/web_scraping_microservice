@@ -53,11 +53,11 @@ async def get_chapter_img(chapter_url: str) -> Chapter:
         
         parser = Manhwa18Parser(chaptersHTML)
 
-        parsedSearchResult = parser.getChapters()
+        parsedSearchResult = parser.getChapter()
 
         if not parsedSearchResult:
             raise CustomError("Encountered a problem while parsing the page or the resource wasnt found", 404, "parsing_error")
 
-        return chaptersHTML
+        return parsedSearchResult
     except Exception as e:
         raise e
