@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import re
 
 class Manhwa18Parser:
 
@@ -39,18 +40,14 @@ class Manhwa18Parser:
         chapters = self.soup.find(attrs={"class": 'panel-manga-chapter'}).find_all('li')
 
         chapter_list = []
-
-        count = 0
         
         for chapter in chapters:
-            count+=1
 
             chapter_url = self.get_chapter_url(chapter)
             chapter_name = self.get_chapter_name(chapter)
             chapter_release_date = self.get_chapter_release_date(chapter)
 
             chapter_dict = {
-                "number": count,
                 "chapter": chapter_name,
                 "chapter_release_date":chapter_release_date,
                 "chapter_url": f"{self.base_url}{chapter_url}"
@@ -66,8 +63,31 @@ class Manhwa18Parser:
 
         return series_dict
     
-    def getChapters(self):
-        return "Hola"
+    def getChapter(self):
+        manga_container = self.soup.find(attrs={"class": "read-manga"})
+
+        chapter_images_container = manga_container.find(attrs={"class": "read-content"}).find_all("img")
+
+        chapter_imgs = []
+        chapter_img = {}
+
+        for chapter in chapter_images_container:
+            meta_data = self.get_chapter_page_number(chapter)
+            image = self.get_chapter_image(chapter)
+
+            chapter_img = {
+                "page_number": meta_data["page"],
+                "image": image
+            }
+            
+            chapter_imgs.append(chapter_img)
+        
+
+
+        return {
+            "chapter": meta_data["chapter"],
+            "manga_chapter":chapter_imgs
+        }
     
 
     ## Metodos usados dentro de search
@@ -108,10 +128,32 @@ class Manhwa18Parser:
         return element.find('a').get('href')
     
     def get_chapter_release_date(self, element):
-        return element.find('span').getText(separator=' ', strip=True)
+        span = element.find('span')
+
+        if span: 
+            release_date = span.getText(separator=' ', strip=True)
+        else:
+            release_date = "NEW"
+
+        return release_date
     
     def get_chapter_name(self, element):
         return element.find('a').getText(separator=' ', strip=True)
     
     def get_chapter_image(self, element):
-        return
+        return element.get("data-src")
+    
+    def get_chapter_page_number(self, element):
+        img_alt = element.get("alt")
+
+        match = re.search(r"Chapter\s+(\d+)\s+Page\s+(\d+)", img_alt)
+
+        if match:
+            chapter = int(match.group(1))
+            page = int(match.group(2))
+
+
+        return {
+            "chapter": chapter,
+            "page": page
+        }
