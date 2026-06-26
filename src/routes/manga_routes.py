@@ -8,8 +8,9 @@ router = APIRouter()
 async def search(data: SearchRequest):
 
     series_name = data.series_name
+    source = data.source
 
-    result = await manga_service.search_series(series_name)
+    result = await manga_service.search_series(series_name, source)
 
     return result
 
@@ -17,12 +18,14 @@ async def search(data: SearchRequest):
 async def getManga(data: MangaRequest):
     
     series_url = data.series_url
+    source = data.source
 
-    return await manga_service.get_manga(series_url)
+    return await manga_service.get_manga(series_url, source)
 
 @router.get('/chapter')
 async def getImages(data: ChapterRequest):
 
     chapter_url = data.chapter_url
+    source = data.source
 
-    return await manga_service.get_chapter_img(chapter_url)
+    return await manga_service.get_chapter_img(chapter_url, source)
