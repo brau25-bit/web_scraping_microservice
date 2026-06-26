@@ -1,62 +1,40 @@
-from src.sources.manhwa18_source import Manhwa18Source
-from src.parsers.manhwa18_parser import Manhwa18Parser
-from src.exception.error import CustomError
+from src.factory.source_factory import SourceFactory
+from src.factory.parser_factory import ParserFactory
 from src.models.image import Chapter
 from src.models.search import MangaSearchResult
 from src.models.manga import MangaDetails
-from fastapi import HTTPException
 
-source = Manhwa18Source()
-
-async def search_series(series_name: str) -> MangaSearchResult:
+async def search_series(series_name: str, source: str) -> MangaSearchResult:
     try:
-        searchHTML = await source.search(series_name)
-    
-        if not searchHTML:
-            raise CustomError("Content not found on source, try another name", 404, "source_problem")
+        source_manga = SourceFactory.create_source(source)
+        searchHTML = await source_manga.search(series_name)
         
-        parser = Manhwa18Parser(searchHTML)
-        
+        parser = ParserFactory.create_parser(source, searchHTML)
         parsedSearchResult = parser.search()
-
-        if not parsedSearchResult:
-            raise CustomError("Encountered a problem while parsing the page or the resource wasnt found", 404, "parsing_error")
         
         return parsedSearchResult
     except Exception as e:
         raise e
     
-async def get_manga(series_url: str) -> MangaDetails:
+async def get_manga(series_url: str, source: str) -> MangaDetails:
     try:
-        seriesHTML = await source.getSeries(series_url)
-    
-        if not seriesHTML:
-            raise CustomError("There was a problem with the source, try again", 404, "source_problem")
-        
-        parser = Manhwa18Parser(seriesHTML)
+        manga_series = SourceFactory.create_source(source)
+        manga_html = await manga_series.getSeries(series_url)
 
-        parsedSearchResult = parser.getSeries()
-
-        if not parsedSearchResult:
-            raise CustomError("Encountered a problem while parsing the page or the resource wasnt found", 404, "parsing_error")
+        parser = ParserFactory.create_parser(source, manga_html)
+        parsed_result = parser.getSeries()
         
-        return parsedSearchResult
+        return parsed_result
     except Exception as e:
         raise e
 
-async def get_chapter_img(chapter_url: str) -> Chapter:
+async def get_chapter_img(chapter_url: str, source: str) -> Chapter:
     try: 
-        chaptersHTML = await source.getChapters(chapter_url)
-    
-        if not chaptersHTML:
-            raise CustomError("There was a problem with the source, try again", 404, "source_error")
+        source_manga = SourceFactory.create_source(source)
+        chapter_html = await source_manga.search(chapter_url)
         
-        parser = Manhwa18Parser(chaptersHTML)
-
+        parser = ParserFactory.create_parser(source, chapter_html)
         parsedSearchResult = parser.getChapter()
-
-        if not parsedSearchResult:
-            raise CustomError("Encountered a problem while parsing the page or the resource wasnt found", 404, "parsing_error")
 
         return parsedSearchResult
     except Exception as e:

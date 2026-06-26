@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import re
+from src.exception.error import CustomError
 
 class Manhwa18Parser:
 
@@ -12,6 +13,9 @@ class Manhwa18Parser:
 
         manga = self.soup.find_all(attrs={"class": "manga-item"})
         count = 0
+
+        if not manga:
+            raise CustomError("Manga not found", 404, "not-found")
 
         for element in manga:
             count += 1
