@@ -47,7 +47,19 @@ src/
 ```
 
 ## flujo del sistema
+1. Cliente llama GET /manga
 
+2. FastAPI valida request
+
+3. Scraper realiza petición HTTP
+
+4. Se aplican reintentos
+
+5. HTML es enviado al parser
+
+6. Parser genera DTO
+
+7. Respuesta al cliente
 
 ## Endpoints
 
@@ -212,14 +224,10 @@ Respuesta esperada:
 ****
 TO DO: 
 
-    1. Retries
-    2. Headers realistas
-    3. DTOs
-    4. Strategy
-    5. Factory
-    6. Dependency Injection
-    7. Adapter
-    8. Builder
-    9. Redis Cache
-    10. Redis Queue
-    11. Workers de descarga
+    * Retries
+    * Headers realistas
+    * DTOs
+    * Dependency Injection
+    * Adapter
+    * Builder
+    
