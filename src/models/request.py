@@ -8,3 +8,4 @@ class ChapterRequest(BaseModel):
 
 class SearchRequest(BaseModel):
     series_name: str
+    source: str
