@@ -1,4 +1,7 @@
+from src.exception.error import CustomError
+
 import httpx
+
 
 HEADERS = {
     "Accept-Language":"en-US,en;q=0.8",
@@ -12,7 +15,7 @@ HEADERS = {
     )
 }
 
-class HTTPX:
+class HTTPXClient:
     def __init__(self):
         self.client = httpx.AsyncClient(
             headers=HEADERS,
