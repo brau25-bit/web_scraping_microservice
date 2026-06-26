@@ -1,7 +1,10 @@
+from src.exception.error import CustomError
+from src.builder.search_builder import SearchBuilder
+from src.builder.series_builder import ChapterBuilder, SeriesBuilder
+from src.builder.chapters_builder import ChapterImgBuilder, EspecifiedChapterBuilder
+
 from bs4 import BeautifulSoup
 import re
-from src.exception.error import CustomError
-
 class Manhwa18Parser:
 
     def __init__(self, html: str):
@@ -12,34 +15,40 @@ class Manhwa18Parser:
         manga_list = []
 
         manga = self.soup.find_all(attrs={"class": "manga-item"})
-        count = 0
 
         if not manga:
-            raise CustomError("Manga not found", 404, "not-found")
+            raise CustomError("Not posible to parse", 500, "not-parsed")
+        
+        manga_count = 0
 
         for element in manga:
-            count += 1
+            manga_count += 1
             title = self.get_title(element)
             cover = self.get_image_link(element)
             latest_chapter = self.get_latest_chapter(element)
             published_at = self.get_date_published(element)
             series_url = self.get_link(element)
 
-            series_dic = {
-                "number": count,
-                "title": title,
-                "cover": cover,
-                "latest_chapter": latest_chapter,
-                "published_at": published_at,
-                "series_url": f"{self.base_url}{series_url}"
-            }
+            series = (
+                SearchBuilder()
+                .number(manga_count)
+                .title(title)
+                .cover(cover)
+                .latest_chapter(latest_chapter)
+                .publish_date(published_at)
+                .series_url(series_url)
+                .build()
+            )   
 
-            manga_list.append(series_dic)
+            manga_list.append(series)
 
         return manga_list
     
     def getSeries(self):
         summary_content = self.soup.find(attrs={"class": "post-status"})
+
+        if not summary_content:
+            raise CustomError("Not posible to parse", 500, "not-parsed")
         
         chapters = self.soup.find(attrs={"class": 'panel-manga-chapter'}).find_all('li')
 
@@ -47,28 +56,34 @@ class Manhwa18Parser:
         
         for chapter in chapters:
 
-            chapter_url = self.get_chapter_url(chapter)
+            chapter_url = self.get_link(chapter)
             chapter_name = self.get_chapter_name(chapter)
             chapter_release_date = self.get_chapter_release_date(chapter)
 
-            chapter_dict = {
-                "chapter": chapter_name,
-                "chapter_release_date":chapter_release_date,
-                "chapter_url": f"{self.base_url}{chapter_url}"
-            }
+            chapter_build = (
+                ChapterBuilder()
+                .chapter(chapter_name)
+                .chapter_release_date(chapter_release_date)
+                .chapter_url(chapter_url)
+                .build()
+            )
 
-            chapter_list.append(chapter_dict)
+            chapter_list.append(chapter_build)
 
-        series_dict = {
-            "post_content": self.get_release_date_and_status(summary_content),
-            "chapters": chapter_list
-        }
+        series = (
+            SeriesBuilder()
+            .post_content(self.get_release_date_and_status(summary_content))
+            .chapters(chapter_list)
+            .build()
+        )
 
-
-        return series_dict
+        return series
     
     def getChapter(self):
         manga_container = self.soup.find(attrs={"class": "read-manga"})
+
+        if not manga_container:
+            raise CustomError("Not posible to parse", 500, "not-parsed")
 
         chapter_images_container = manga_container.find(attrs={"class": "read-content"}).find_all("img")
 
@@ -79,20 +94,22 @@ class Manhwa18Parser:
             meta_data = self.get_chapter_page_number(chapter)
             image = self.get_chapter_image(chapter)
 
-            chapter_img = {
-                "page_number": meta_data["page"],
-                "image": image
-            }
+            chapter_img = (
+                ChapterImgBuilder()
+                .page_number(meta_data["page"])
+                .image(image)
+                .build()
+            )
             
             chapter_imgs.append(chapter_img)
         
+        chapter_general = (
+            EspecifiedChapterBuilder()
+            .chapter(meta_data["chapter"])
+            .manga_chapter(chapter_imgs)
+        )
 
-
-        return {
-            "chapter": meta_data["chapter"],
-            "manga_chapter":chapter_imgs
-        }
-    
+        return chapter_general
 
     ## Metodos usados dentro de search
 
@@ -100,7 +117,8 @@ class Manhwa18Parser:
          return element.find('a').get('title')
     
     def get_link(self, element):
-         return element.find('a').get('href')
+         manga_name = element.find('a').get('href')
+         return f"{self.base_url}{manga_name}"
     
     def get_image_link(self, element):
          return element.find('img').get('data-src')
@@ -127,9 +145,6 @@ class Manhwa18Parser:
             
 
         return post_content
-
-    def get_chapter_url(self, element):
-        return element.find('a').get('href')
     
     def get_chapter_release_date(self, element):
         span = element.find('span')
