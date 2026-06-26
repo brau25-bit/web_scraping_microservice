@@ -10,7 +10,7 @@ async def custom_error_handler(request, exc: CustomError):
     return JSONResponse(
         status_code=exc.status_code,
         content={
-            "success": False,
+            "status_code": exc.status_code,
             "message": exc.message,
             "error_code": exc.error_code
         }
