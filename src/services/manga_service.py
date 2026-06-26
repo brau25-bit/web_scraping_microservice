@@ -31,7 +31,7 @@ async def get_manga(series_url: str, source: str) -> MangaDetails:
 async def get_chapter_img(chapter_url: str, source: str) -> Chapter:
     try: 
         source_manga = SourceFactory.create_source(source)
-        chapter_html = await source_manga.search(chapter_url)
+        chapter_html = await source_manga.getChapters(chapter_url)
         
         parser = ParserFactory.create_parser(source, chapter_html)
         parsedSearchResult = parser.getChapter()
