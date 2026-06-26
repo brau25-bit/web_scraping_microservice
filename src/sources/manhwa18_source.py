@@ -1,10 +1,11 @@
-import os
-from dotenv import load_dotenv
-from src.core.http_client import HTTPX
+from src.core.http_client import HTTPXClient
 from src.strategy.manga_strategy import MangaSource
 
+import os
+from dotenv import load_dotenv
+
 load_dotenv()
-httpx_client = HTTPX()
+httpx_client = HTTPXClient()
 
 class Manhwa18Source(MangaSource):    
     base_url = os.getenv("MANHWA18_BASE_URL")
