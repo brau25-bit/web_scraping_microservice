@@ -226,8 +226,4 @@ TO DO:
 
     * Retries
     * Headers realistas
-    * DTOs
-    * Dependency Injection
-    * Adapter
-    * Builder
     
