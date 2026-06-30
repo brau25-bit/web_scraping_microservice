@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from src.services import manga_service
 from src.models.request import MangaRequest, ChapterRequest, SearchRequest
+from src.models.download import Download
 
 router = APIRouter()
 
@@ -29,3 +30,7 @@ async def getImages(data: ChapterRequest):
     source = data.source
 
     return await manga_service.get_chapter_img(chapter_url, source)
+
+@router.post('/download')
+async def downloadChapters(data: Download):
+    return await manga_service.publish_download(data)
