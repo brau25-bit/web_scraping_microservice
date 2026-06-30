@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
 class Chapter(BaseModel):
-    chapter_number: int
+    chapter: str
+    chapter_release_date: str
     chapter_url: str

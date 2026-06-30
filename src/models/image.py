@@ -5,5 +5,5 @@ class ChapterImages(BaseModel):
     image_url: str
 
 class Chapter(BaseModel):
-    chapter_number: int
+    chapter: int
     images: list[ChapterImages]

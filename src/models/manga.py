@@ -9,5 +9,9 @@ class Manga(BaseModel):
     publishing_date: str
 
 class MangaDetails(BaseModel):
-    title: str
+    post_content: PostContent
     chapters: list[Chapter]
+
+class PostContent(BaseModel):
+    Release: str
+    Status: str
