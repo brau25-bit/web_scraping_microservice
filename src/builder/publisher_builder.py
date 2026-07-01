@@ -3,7 +3,7 @@ import uuid
 class SeriesDiscoveredBuilder:
     def __init__(self):
         self.data = {
-            "event": "series.discovered",
+            "event": "series.discovered.queue",
             "series_id": str(uuid.uuid4())
         }
 
