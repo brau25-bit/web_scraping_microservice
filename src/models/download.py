@@ -15,6 +15,7 @@ class Series(BaseModel):
 
 class Chapters(BaseModel):
     chapter: str
+    chapter_release_date: str
     chapter_url: str
 
 class Chapter(BaseModel):
