@@ -3,11 +3,14 @@ Esta API de python esta diseñada como microservicio para hacer web scraping a s
 
 ## Caracteristicas
 
+- Descarga de series de manga
+- Lectura en linea
 - Scraping de múltiples sitios
 - Rotación de User-Agent
 - Reintentos automáticos
 - Parseo HTML
 - API REST
+- Colas rabbitMQ
 
 ## Tecnologias
 
@@ -16,6 +19,8 @@ Esta API de python esta diseñada como microservicio para hacer web scraping a s
 * pydantic
 * BeautifulSoup
 * httpx
+* aio_pika
+
 
 ## Arquitectura
 ```
@@ -26,24 +31,22 @@ src/
 |--routes/
 |  
 |--sources/
-|  |--manhwa18.py
-|  |--toonily.py
 |
 |--parsers/
-|  |--manga_parser.py
-|  |--chapter_parser.py
 |
 |--models/
-|  |--manga.py
-|  |--chapter.py
 |
 |--core/
-|  |--http_client.py
-|  |--exceptions.py
-|  |--config.py
 |
 |--exception/
-|  |-error.py
+|
+|--builder/
+|
+|--factory/
+|
+|--strategy/
+|
+|--main.py
 ```
 
 ## flujo del sistema
@@ -66,7 +69,8 @@ src/
 GET manga/search
 ```json
 {
-    "series_name": "blood"
+    "series_name": "blood",
+    "source": "manhwa18"
 }
 ```
 
@@ -95,7 +99,8 @@ Respuesta esperada:
 GET manga/
 ```json
 {
-    "series_url": "https://manhwa18.cc/webtoon/revenge-of-the-iron-blooded-sword-hound"
+    "series_url": "https://manhwa18.cc/webtoon/revenge-of-the-iron-blooded-sword-hound",
+    "source": "manhwa18"
 }
 ```
 
@@ -124,7 +129,8 @@ Respuesta esperada:
 GET manga/chapter
 ```json
 {
-    "chapter_url": "https://manhwa18.cc/webtoon/revenge-of-the-iron-blooded-sword-hound/chapter-166"
+    "chapter_url": "https://manhwa18.cc/webtoon/revenge-of-the-iron-blooded-sword-hound/chapter-166",
+    "source": "manhwa18"
 }
 ```
 
@@ -221,9 +227,20 @@ Respuesta esperada:
 }
 ```
 
+POST manga/download
+"""json
+
+"""
+
+Respuesta esperada:
+"""json
+
+"""
+
 ****
 TO DO: 
 
     * Retries
     * Headers realistas
+    * recurso /update
     
