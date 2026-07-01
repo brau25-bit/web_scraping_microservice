@@ -107,6 +107,7 @@ class Manhwa18Parser:
             EspecifiedChapterBuilder()
             .chapter(meta_data["chapter"])
             .manga_chapter(chapter_imgs)
+            .build()
         )
 
         return chapter_general
