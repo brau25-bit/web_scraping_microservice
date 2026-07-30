@@ -4,7 +4,7 @@ class SeriesDiscoveredBuilder:
     def __init__(self):
         self.data = {
             "event": "series.discovered.queue",
-            "series_id": str(uuid.uuid4())
+            "id": str(uuid.uuid4())
         }
 
     def set_source(self, source: str):
@@ -17,6 +17,14 @@ class SeriesDiscoveredBuilder:
     
     def set_cover(self, cover: str):
         self.data["cover"] = cover
+        return self
+    
+    def set_serie_url(self, url: str):
+        self.data["serie_url"] = url
+        return self
+
+    def set_status(self, status: str):
+        self.data["status"] = status
         return self
 
     def build(self):
