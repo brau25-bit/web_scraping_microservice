@@ -11,7 +11,7 @@ class RabbitClient:
 
     async def connect(self):
         try:
-            self.connection = await connect("amqp://guest:guest@localhost/") 
+            self.connection = await connect("amqp://guest:guest@localhost:5672/") 
             self.channel = await self.connection.channel()
         except Exception as e:
             raise CustomError("Failed to connect to rabbitMQ", 500, "rabbit-connection") from e
@@ -22,7 +22,11 @@ class RabbitClient:
 
         await self.channel.declare_queue(
             queue_name,
-            durable=True
+            durable=True,
+            arguments={
+                "x-dead-letter-exchange": "",
+                "x-dead-letter-routing-key": f"{queue_name}.dlq"
+            }
         )
     
     async def publish(self, queue_name, message):
