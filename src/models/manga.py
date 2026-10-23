@@ -8,10 +8,11 @@ class Manga(BaseModel):
     last_chapter: str
     publishing_date: str
 
+class PostContent(BaseModel):
+    Release: str
+    Status: str
+
 class MangaDetails(BaseModel):
     post_content: PostContent
     chapters: list[Chapter]
 
-class PostContent(BaseModel):
-    Release: str
-    Status: str
