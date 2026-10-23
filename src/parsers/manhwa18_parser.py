@@ -168,10 +168,13 @@ class Manhwa18Parser:
 
         match = re.search(r"Chapter\s+(\d+)\s+Page\s+(\d+)", img_alt)
 
-        if match:
-            chapter = int(match.group(1))
-            page = int(match.group(2))
+        if not match:
+            return None
 
+        chapter = int(match.group(1))
+        page = int(match.group(2))
+
+        print(match, chapter)
 
         return {
             "chapter": chapter,
