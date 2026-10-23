@@ -1,17 +1,21 @@
 from aio_pika import Message, connect, DeliveryMode
 import json
+import os
+from dotenv import load_dotenv
 
 from src.exception.error import CustomError
 
+load_dotenv()
 class RabbitClient:
 
     def __init__(self):
         self.connection = None
         self.channel = None
+        self.rabbit_url = os.getenv("RABBITMQ_URL")
 
     async def connect(self):
         try:
-            self.connection = await connect("amqp://guest:guest@localhost:5672/") 
+            self.connection = await connect(self.rabbit_url) 
             self.channel = await self.connection.channel()
         except Exception as e:
             raise CustomError("Failed to connect to rabbitMQ", 500, "rabbit-connection") from e
